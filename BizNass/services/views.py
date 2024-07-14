@@ -6,13 +6,13 @@ from .serializers import ServiceCategorySerializer, ServiceProviderSerializer, S
 # Create your views here.
 
 class ServiceCategoryViewset(viewsets.ModelViewSet):
-    queryset = ServiceCategory.object.all()
+    queryset = ServiceCategory.objects.all()
     serializer_class = ServiceCategorySerializer
 
 class ServiceProviderViewset(viewsets.ModelViewSet):
-    queryset = ServiceProvider.object.all()
+    queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
 
 class ServiceReviewViewset(viewsets.ModelViewSet):
-    queryset = ServiceReview.object.all()
+    queryset = ServiceReview.objects.all()
     serializer_class = ServiceReviewSerializer
