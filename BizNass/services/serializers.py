@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import ServiceCategory, ServiceProvider, ServiceReview
+from .models import ServiceCategory, ServiceProvider, ServiceReview, UserProfile
 
 class ServiceCategorySerializer(serializers.ModelSerializer):
     class Meta:  # Update 'meta' to 'Meta'
@@ -16,6 +16,11 @@ class ServiceReviewSerializer(serializers.ModelSerializer):
     class Meta:  # Update 'meta' to 'Meta'
         model = ServiceReview
         fields = '__all__'
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['phone_number', 'address']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
