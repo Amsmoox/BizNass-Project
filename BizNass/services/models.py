@@ -20,6 +20,7 @@ class ServiceProvider(models.Model):
 
     def __str__(self):
         return self.name
+    
 
 class ServiceReview(models.Model):
     service_provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE, related_name='reviews') #Forign Key ?
@@ -29,4 +30,12 @@ class ServiceReview(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Review by {self.user.username} for {self.service_provider.name}'
+        return f'Review by {self.user.username} for {self.service_provider.name}' 
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.user.username
