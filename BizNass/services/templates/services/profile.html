@@ -1,0 +1,11 @@
+{% extends 'services/base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h1>Profile</h1>
+<p>Username: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+<p>Phone Number: {{ user.userprofile.phone_number }}</p>
+<p>Address: {{ user.userprofile.address }}</p>
+{% endblock %}
