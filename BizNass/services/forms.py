@@ -17,3 +17,7 @@ class RegisterForm(forms.ModelForm):
             user.save()
             UserProfile.objects.create(user=user, phone_number=self.cleaned_data['phone_number'], address=self.cleaned_data['address'])
         return user
+
+class PaymentForm(forms.Form):
+    amount = forms.DecimalField(max_digits=10, decimal_places=2)
+    stripe_token = forms.CharField(widget=forms.HiddenInput)

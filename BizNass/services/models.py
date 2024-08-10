@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import stripe
+from django.conf import settings
 
 class ServiceCategory(models.Model):
     name = models.CharField(max_length=255)
@@ -39,3 +41,23 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    stripe_charge_id = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment of {self.amount} by {self.user.username}"
+
+    def charge(self, token):
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        charge = stripe.Charge.create(
+            amount=int(self.amount * 100),  # Stripe uses cents, hence multiplying by 100
+            currency='usd',
+            description=f"Charge for {self.user.email}",
+            source=token,
+        )
+        self.stripe_charge_id = charge['id']
+        self.save()

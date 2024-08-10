@@ -1,10 +1,12 @@
 from rest_framework import viewsets, generics
-from .models import ServiceCategory, ServiceProvider, ServiceReview
+from .models import ServiceCategory, ServiceProvider, ServiceReview, Payment
 from .serializers import ServiceCategorySerializer, ServiceProviderSerializer, ServiceReviewSerializer, RegisterSerializer
 from rest_framework.permissions import AllowAny
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import RegisterForm
+from .forms import RegisterForm, PaymentForm
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 class ServiceCategoryViewset(viewsets.ModelViewSet):
     queryset = ServiceCategory.objects.all()
@@ -48,3 +50,24 @@ def user_login(request):
 
 def profile(request):
     return render(request, 'services/profile.html')
+
+
+
+@login_required
+def make_payment(request):
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            payment = Payment(
+                user=request.user,
+                amount=form.cleaned_data['amount']
+            )
+            payment.charge(form.cleaned_data['stripe_token'])
+            return redirect('profile')
+    else:
+        form = PaymentForm()
+
+    return render(request, 'services/payment.html', {
+        'form': form,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY
+    })
